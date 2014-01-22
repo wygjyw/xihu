@@ -1,9 +1,12 @@
 package com.demo.dao;
 
+import java.sql.ResultSet;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.demo.domain.LoginLog;
 
 @Repository
 public class LoginLogDao
@@ -11,10 +14,11 @@ public class LoginLogDao
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
-	public int getMatchCount(String userName, String password)
+
+	public void updateLoginInfo(LoginLog loginLog)
 	{
-		String sqlStr = " SELECT count(*) FROM t_user WHERE username=? and password =?";
-		return jdbcTemplate.qureyForInt(sqlStr, new Object[] {userName, password});
+		String sqlStr = " INSERT INTO t_loginlog(userid, logdate, logip) VALUES(?, ?, ?)";
+		jdbcTemplate.update(sqlStr, new Object[] {loginLog.getUserId(), loginLog.getLoginDate(), loginLog.getLoginIP());
 	}
 }
 
