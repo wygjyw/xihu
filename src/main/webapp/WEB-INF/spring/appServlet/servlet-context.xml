@@ -22,6 +22,8 @@
 	</beans:bean>
 	
 	<context:component-scan base-package="com.demo.xihu" />
+	<context:component-scan base-package="com.demo.dao" />
+	<context:component-scan base-package="com.demo.service" />
 	
 	
 	
