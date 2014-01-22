@@ -1,6 +1,7 @@
 package com.demo.dao;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -27,7 +28,7 @@ public class UserDao
 		String sqlStr = " SELECT userid,username FROM t_user WHERE username=?";
 		final User user = new User();
 		jdbcTemplate.query(sqlStr, new Object[] {userName},
-				new RowCallbackHandle()
+				new RowCallbackHandler()
 			{
 				public void processRow(ResultSet rs) throws SQLException
 				{

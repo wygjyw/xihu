@@ -5,6 +5,10 @@ import java.util.Date;
 
 public class LoginLog implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int loginId;
 	private int userId;
 	private Date loginDate;

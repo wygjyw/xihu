@@ -1,53 +1,46 @@
 package com.demo.xihu;
 
-import java.text.DateFormat;
 import java.util.Date;
-import java.util.Locale;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
-/**
- * Handles requests for the application home page.
- */
+import com.demo.domain.User;
+import com.demo.service.UserService;
+import com.demo.xihu.LoginCommand;
+
 @Controller
+@RequestMapping(value = "/")
 public class HomeController {
-	
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
-	
-	/**
-	 * Simply selects the home view to render by returning its name.
-	 */
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String home(Locale locale, Model model) {
-		logger.info("Welcome home! The client locale is {}.", locale);
-		
-		Date date = new Date();
-		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
-		
-		String formattedDate = dateFormat.format(date);
-		
-		model.addAttribute("serverTime", formattedDate );
-		
-		return "home";
-	}
 
-	@RequestMapping(value = "/loginCheck.html", method = RequestMethod.GET)
-	public String home(Locale locale, Model model) {
-		logger.info("Welcome home! The client locale is {}.", locale);
-		
-		Date date = new Date();
-		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
-		
-		String formattedDate = dateFormat.format(date);
-		
-		model.addAttribute("serverTime", formattedDate );
-		
-		return "home";
-	}
+    @Autowired
+    private UserService userService;
 
+    @RequestMapping(value = "/login.html")
+    public String loginPage() {
+        return "login";
+    }
+
+    @RequestMapping(value = "/loginCheck.html")
+    public ModelAndView loginCheck(HttpServletRequest request, LoginCommand loginCommand) {
+        boolean isValidUser =
+                userService.hasMatchUser(loginCommand.getUserName(),
+                        loginCommand.getPassword());
+        if (!isValidUser) {
+            return new ModelAndView("login", "error", "用户名或密码错误。");
+        } else {
+            User user = userService.findUserByUserName(loginCommand
+                    .getUserName());
+            user.setLastLogIP(request.getLocalAddr());
+            user.setLastLogDate(new Date());
+            userService.loginSuccess(user);
+            request.getSession().setAttribute("user", user);
+            return new ModelAndView("main");
+        }
+    }
 }
+

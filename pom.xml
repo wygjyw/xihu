@@ -46,7 +46,7 @@
         <dependency>
             <groupId>commons-dbcp</groupId>
             <artifactId>commons-dbcp</artifactId>
-            <version>${commons-dbcp.version}</version>
+            <version>1.4</version>
         </dependency>
 
 		<!-- AspectJ -->
